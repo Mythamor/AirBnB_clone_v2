@@ -49,7 +49,6 @@ class BaseModel:
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
-        from models import storage
         self.updated_at = datetime.now()
         models.storage.new(self)
         models.storage.save()
@@ -59,8 +58,8 @@ class BaseModel:
         dictionary = {}
         dictionary.update(self.__dict__)
 
-        if '_sa_instance_state' in my_dict:
-            del my_dict['_sa_instance_state']
+        if '_sa_instance_state' in dictionary:
+            del dictionary['_sa_instance_state']
 
         dictionary.update({'__class__':
                           (str(type(self)).split('.')[-1]).split('\'')[0]})
