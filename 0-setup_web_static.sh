@@ -7,19 +7,19 @@ sudo apt-get -y install nginx
 sudo service nginx restart
 
 # Directory/ File config
-sudo mkdir -p /data/web_static/releases/test/  /data/web_static/shared/
+sudo mkdir -p /data/web_static/releases/test/ /data/web_static/shared/
 
 # Test file
-echo "Hello World!!" | sudo tee /data/web_static/releases/test/index.html
+echo "Hello World!!" | sudo tee /data/web_static/releases/test/index.html > /dev/null
 
 # Symbolic link
-sudo ln -sf /data/web_static/releases/test/ /data/web_ststic/current
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
 
 # File permissions
-sudo chown -R ubuntu:ubuntu /data/
+sudo chown -hR ubuntu:ubuntu /data/
 
 # Configure nginx
-sudo sed -i '44i \\n\tlocation /hbnb_static {n\t\talias /data/web_static/current/;\n\t}' /etc/nginx/sites-available/default
+sudo sed -i "44i \\n\tlocation /hbnb_static {n\t\talias /data/web_static/current/;\n\t}" /etc/nginx/sites-available/default
 
 # restart Nginx
 sudo service nginx restart
