@@ -15,7 +15,7 @@ def do_pack():
 
     # set up datetime
     now = datetime.now()
-    now = strftime('%Y%m%d%H%M%S')
+    now = now.strftime('%Y%m%d%H%M%S')
     archive_path = 'versions/web_static_' + now + '.tgz'
 
     # Create archive
