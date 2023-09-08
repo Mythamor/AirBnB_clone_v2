@@ -33,14 +33,14 @@ def do_deploy(archive_path):
         # uncompress archive and delete .tgz
         run('sudo tar -xzf /tmp/web_static_{}.tgz -C \
                 /data/web_static/releases/web_ststic_{}/'
-                .format(target, target))
+            .format(target, target))
 
         # delete archive from web server
         run('sudo rm /tmp/web_static_{}.tgz'.format(target))
 
         # move files to web_static
         run('sudo mv /data/web_static/releases/web_static_{}/web_static/*\
-                /data/web_static/releases/web_static_{}/'.format(target, target))
+            /data/web_static/releases/web_static_{}/'.format(target, target))
 
         # remove cached data
         run('sudo rm -rf /data/web_static/releases/\
@@ -52,9 +52,8 @@ def do_deploy(archive_path):
         # create new symbolic link
         run('sudo ln -s /data/web_static/releases/\
             web_static_{}/ /data/web_static/current'.format(target))
-    except:
-            return False
+    except FileNotFoundError:
+        return False
 
-        # if all ops are don correctly
-        return True
-
+        # if all ops are done correctly
+    return True
