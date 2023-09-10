@@ -1,51 +1,59 @@
 #!/usr/bin/python3
 """
-Deploys to the server from local machine
+Fabric script (based on the file 2-do_deploy_web_static.py) that
+creates and distributes an archive to your web servers,
+using the function deploy
 """
-
-from fabric.api import env, put, run
+from fabric.api import *
+from datetime import datetime
 import os
 
 env.hosts = ['52.91.125.119', '52.86.30.214']
 env.user = 'ubuntu'
 env.key_filename = '~/.ssh/id_rsa'
 
+
 def do_deploy(archive_path):
     """
-    Creates and distributes an archive to your web servers.
+    creates and distributes an archive to your web servers
     """
     try:
         # Check if file path exists
-        if not os.path.exists(archive_path):
+        if not (os.path.exists(archive_path)):
             return False
 
-        # Upload archive to tmp directory of web server
-        put(archive_path, '/tmp')
+        # upload archive to tmp directory of web server
+        put(archive_path, '/tmp/')
 
-        # Extract the version from the archive filename
-        version = archive_path.split('/')[-1][:-4]
+        # target directory
+        target = archive_path[-18:-4]
+        run('sudo mkdir -p /data/web_static/\
+releases/web_static_{}/'.format(target))
 
-        # Create a directory for the new release
-        release_path = '/data/web_static/releases/{}'.format(version)
-        run('sudo mkdir -p {}'.format(release_path))
+        # uncompress archive and delete .tgz
+        run('sudo tar -xzf /tmp/web_static_{}.tgz -C \
+/data/web_static/releases/web_static_{}/'
+            .format(target, target))
 
-        # Uncompress archive and delete .tgz
-        run('sudo tar -xzf /tmp/{}.tgz -C {}'.format(version, release_path))
-        run('sudo rm /tmp/{}.tgz'.format(version))
+        # delete archive from web server
+        run('sudo rm /tmp/web_static_{}.tgz'.format(target))
 
-        # Move files to web_static
-        run('sudo mv {}/web_static/* {}/'.format(release_path, release_path))
+        # move files to web_static
+        run('sudo mv /data/web_static/releases/web_static_{}/web_static/* \
+/data/web_static/releases/web_static_{}/'.format(target, target))
 
-        # Remove the old symbolic link
-        current_path = '/data/web_static/current'
-        run('sudo rm -rf {}'.format(current_path))
+        # remove cached data
+        run('sudo rm -rf /data/web_static/releases/\
+web_static_{}/web_static'.format(target))
 
-        # Create a new symbolic link
-        run('sudo ln -s {} {}'.format(release_path, current_path))
+        # delete pre-existing sym link
+        run('sudo rm -rf /data/web_static/current')
 
-        return True
-
-    except Exception as e:
-        print("Error:", str(e))
+        # create new symbolic link
+        run('sudo ln -s /data/web_static/releases/\
+web_static_{}/ /data/web_static/current'.format(target))
+    except FileNotFoundError:
         return False
 
+        # if all ops are done correctly
+    return True
