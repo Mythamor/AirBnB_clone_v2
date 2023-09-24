@@ -14,7 +14,7 @@ Routes:
 Must use the option strict_slashes=False in your route definition
 """
 from models import storage
-from models.state import State
+from models import *
 from flask import Flask, render_template
 app = Flask(__name__)
 app.url_map.strict_slashes = False
