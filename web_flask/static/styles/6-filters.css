@@ -79,9 +79,11 @@ ul{
 }
 .locations:hover >.popover{
     visibility: visible;
+    background-color: #FFF;
     margin-bottom: 50px;
 }
 
 .amenities:hover > .popover{
     visibility: visible;
+    background-color: #FFF;
 }
