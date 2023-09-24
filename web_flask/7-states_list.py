@@ -20,19 +20,20 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 
 
-@app.route("/states_list")
+@app.route('/states_list')
 def fecth_states():
     """
     display html page
     fecth sorted states to insert into html UL tag
     """
-    state_objs = [st for st in storage.all(State).values()]
+    states = storage.all(State)
+    sorted_states = sorted(states.values(), key=lambda state: state.name)
     return render_template("7-states_list.html",
-                           state_objs=state_objs)
+                           sorted_states=sorted_states)
 
 
 @app.teardown_appcontext
-def tear_down(self):
+def tear_down(arg=None):
     """
     remove the current SQLAlchemy Session
     """
