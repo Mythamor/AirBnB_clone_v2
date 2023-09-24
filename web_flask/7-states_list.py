@@ -73,7 +73,7 @@ def odd_or_even(n):
 
 
 @app.teardown_appcontext
-def tear_down(arg=None):
+def tear_down(self):
     """
     remove the current SQLAlchemy Session
     """
@@ -88,7 +88,7 @@ def fecth_states():
     """
     state_objs = [st for st in storage.all(State).values()]
     return render_template("7-states_list.html",
-                          state_objs=state_objs)
+                           state_objs=state_objs)
 
 
 if __name__ == "__main__":
