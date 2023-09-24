@@ -20,14 +20,6 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 
 
-@app.teardown_appcontext
-def tear_down(self):
-    """
-    remove the current SQLAlchemy Session
-    """
-    storage.close()
-
-
 @app.route("/states_list")
 def fecth_states():
     """
@@ -37,6 +29,14 @@ def fecth_states():
     state_objs = [st for st in storage.all(State).values()]
     return render_template("7-states_list.html",
                            state_objs=state_objs)
+
+
+@app.teardown_appcontext
+def tear_down(self):
+    """
+    remove the current SQLAlchemy Session
+    """
+    storage.close()
 
 
 if __name__ == "__main__":
