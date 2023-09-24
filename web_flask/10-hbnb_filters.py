@@ -13,10 +13,10 @@ app = Flask(__name__)
 def hbnb_filters():
     """Render template with states
     """
-    path = '10-hbnb_filters.html'
-    states = storage.all(State)
-    amenities = storage.all(Amenity)
-    return render_template(path, states=states, amenities=amenities)
+    state_objs = [s for s in storage.all(State).values()]
+    amenity_objs = [a for a in storage.all(Amenity).values()]
+    return render_template('10-hbnb_filters.html',
+                           state_objs=state_objs, amenity_objs=amenity_objs)
 
 
 @app.teardown_appcontext
