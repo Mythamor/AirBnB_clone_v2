@@ -20,34 +20,25 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 
 
-@app.teardown_appcontext
-def tear_down(self):
+@app.route('/cities_by_states')
+def states_list():
     """
-    remove the current SQLAlchemy Session
+    Render template with states
+    """
+    path = '8-cities_by_states.html'
+    states = storage.all(State)
+
+    # sort State object alphabetically by name
+    # sorted_states = sorted(states.values(), key=lambda state: state.name)
+    return render_template(path, states=states)
+
+
+@app.teardown_appcontext
+def app_teardown(arg=None):
+    """
+    Clean-up session
     """
     storage.close()
-
-
-@app.route("/states_list")
-def fecth_states():
-    """
-    display html page
-    fecth sorted states to insert into html UL tag
-    """
-    state_objs = [st for st in storage.all(State).values()]
-    return render_template("7-states_list.html",
-                           state_objs=state_objs)
-
-
-@app.route("/cities_by_states")
-def fetch_cities_by_states():
-    """
-    fetch sorted states to insert into html in UL tag
-    fetch sorted cities in each state into LI tag ->in HTML file
-    """
-    state_objs = [st for st in storage.all(State).values()]
-    return render_template('8-cities_by_states.html',
-                           state_objs=state_objs)
 
 
 if __name__ == "__main__":
