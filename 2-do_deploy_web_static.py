@@ -4,15 +4,15 @@ Fabric script (based on the file 2-do_deploy_web_static.py) that
 creates and distributes an archive to your web servers,
 using the function deploy
 """
-from fabric.api import env, put, run
+from fabric.api import *
 from datetime import datetime
 from os import path
 
 env.hosts = ['52.91.125.119', '52.86.30.214']
 env.user = 'ubuntu'
-env.key_filename = '.ssh/id_rsa'
+env.key_filename = '~/.ssh/id_rsa'
 
-
+@task
 def do_deploy(archive_path):
     """
     creates and distributes an archive to your web servers
@@ -28,7 +28,7 @@ def do_deploy(archive_path):
         # target directory
         target = archive_path[-18:-4]
         run('sudo mkdir -p /data/web_static/\
-                releases/web_static_{}/'.format(target))
+releases/web_static_{}/'.format(target))
 
         # uncompress archive and delete .tgz
         run('sudo tar -xzf /tmp/web_static_{}.tgz -C \
